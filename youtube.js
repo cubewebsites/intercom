@@ -11,7 +11,13 @@ addParser(youtube_hook);
 // useful to have a helptext for a program which requires argumenrs or flags.
 helpText = "<strong>Welcome to the <i>intercom youtube app</i>.</strong><br />" + 
 "To get started, type 'youtube run'";
-youtube_step	=	-1;
+
+
+/**
+ * Useful variables
+ */
+lightbox_enabled	=	true;
+
 // This is our hook function. This will be run whenever a user enters input.
 // This function should look for initiating calls and act accordingly.
 // Here, we have our hook print the helptext when there are no arguments,
@@ -105,6 +111,14 @@ function youtube_parser(input) {
 	else if(youtube_arguments[0]=='clear') {
 		clearScreen();
 	}
+	
+	//lightbox toggle
+	else if(youtube_arguments[0]=='lightbox') {		
+		lightbox_enabled	=	youtube_arguments[1]==0?0:1;
+		if(lightboxstatus==1)	output("Lightbox enabled");
+		else					output("Lightbox disabled");
+	}
+	
 }
 
 function outputHelpCommands() {
@@ -115,8 +129,9 @@ function outputHelpCommands() {
   output("<b>toprated</b> - top rated videos on YouTube");
   output("<b>mostviewed</b> - most viewed videos on YouTube");
   output("<b>recentlyfeatured</b> - recently featured videos on YouTube");
-  output("<b>user</b> - find videos by a specified user. Use <i>-u=username</i> to specify user.");
-  output("<b>search</b> - search by keyword. Use <i>-q=whatever</i> to specify search term.");
+  output("<b>user</b> - find videos by a specified user. Use <i>-u[sername]=username</i> to specify user.");
+  output("<b>search</b> - search by keyword. Use <i>-q[uery]=whatever</i> to specify search term.");
+  output("<b>lightbox</b> - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0)");
 }
 
 function youtube_video_search(search_mode,params) {
