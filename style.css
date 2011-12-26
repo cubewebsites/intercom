@@ -5,6 +5,9 @@ body {
 	background-color: #000000;
 }
 
+a { color:#6AEEFD; text-decoration:none; }
+a:hover { text-decoration:underline; }
+
 input:focus {
     outline: none;
 }
@@ -20,3 +23,5 @@ input {
 	background-color: #000000;
 	color: #FAFAFA
 }
+
+.error { color:red; }

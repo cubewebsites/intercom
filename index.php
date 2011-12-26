@@ -1,8 +1,15 @@
+<?php
+	$base	=	str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+?>
 <!DOCTYPE html>
 <html onclick="$('#input').focus()">
   <head>
     <title>Intercom Development</title>
     <link rel='stylesheet' href='style.css' type='text/css' />
+	<script type="text/javascript">
+		var basepath	=	'<?php echo $base ?>'
+	</script>
+	
     <!-- jQuery -->
     <script type='text/javascript' 
       src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'>
@@ -11,15 +18,15 @@
     <!-- Intercom -->
     <script type='text/javascript' src='intercom.js'></script>
     
-    <!-- Plugins -->
-    <script type='text/javascript' src='demo.js'></script>
+    <!-- Plugins -->    
+	<script type='text/javascript' src='youtube.js'></script>
     
   </head>
   <body>
     <!-- Code to run when page is ready -->
     <script>
     $("document").ready(function() {
-      output("Type 'help' for installed plugins. Type 'demo' to start the demo");
+      output("Type 'help' for installed plugins. Type 'youtube run' to start the app");
     });
     </script>
   
