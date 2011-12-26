@@ -8,7 +8,12 @@ $youtube->setMajorProtocolVersion(2);
 
 $videoid	=	getRequest('video');
 if($videoid) {
-	$video	=	$youtube->getVideoEntry($videoid);
+	$cacheid	=	'videoinfo'.$videoid;
+	$video		= loadCache($cacheid);
+	if(!$video) {
+		$video	=	$youtube->getVideoEntry($videoid);
+		saveCache($video,$cacheid,array('videoinfo'));
+	}
 	if($video) {
 		//get the category name		
 		$categorystring		=	'';
