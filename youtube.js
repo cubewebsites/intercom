@@ -151,7 +151,9 @@ function youtube_video_search(search_mode,params) {
 			}
 			//setup lightbox if enabled
 			if(lightbox_enabled)
-				$("a[rel^='prettyPhoto']").prettyPhoto();			
+				$("a[rel^='prettyPhoto']").prettyPhoto({
+					deeplinking: false
+				});			
 			//display error if no videos found
 			if(data.length==0)
 				output('<span class="error">No results found</span>');
