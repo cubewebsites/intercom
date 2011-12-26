@@ -162,13 +162,13 @@ function outputVideoResultCommands() {
  * Input stream for handling a set of video results
  */
 function youtube_video_result_parser(input) {
-	output(input);	
+	outputWithCarrot(input);	
 	youtube_arguments	= extractArguments(input);
 	youtube_flags		= extractFlags(input);
 	//exit
 	if(youtube_arguments[0]=='q') {
 		output("Exit successful");
-		outputHelpCommands();
+		//outputHelpCommands();
 		setInputStream(youtube_parser);
 	}
 	//help
