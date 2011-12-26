@@ -1,205 +1,35 @@
-#intercom
-###A console for the web
+#YouTube intercom
+###A console for YouTube
 
-Intercom is a JavaScript-based console I/O system designed for 
-easy extension using a module system.
+YouTube Intercom is a JavaScript-based console I/O system designed for interacting with the YouTube API
+This plugin is based on the [Intercom console by twisterghost](https://github.com/twisterghost/intercom)
 
-[Live Demo](http://i.amMichael.com/demo/intercom)
-
+[Live Demo](http://cubewebsites.com/console/)
 
 #Contents
 1. Installation
-2. Creating Modules
-3. API
+2. Commands
+3. YouTube Interaction
+4. Working with Intercom
 
 ##1. Installation
-Installing a setup of intercom is as simple as dropping the project files into 
+Installing a setup of Youtube intercom is as simple as dropping the project files into 
 your folder of choice.
-To add a module to your installation, add a javascript include line under the 
-specified comment in index.html:
-&lt;script type='text/javascript' src='module_name.js'&gt;&lt;/script&gt;
 
-##2. Creating Modules
-An intercom module is a standardized JavaScript file which is included into the 
-main file with a JS inclusion tag. Creating a module is as simple as creating 
-a new file.
+##2. Commands
+The console currently allows the following commands:
+`help` - display help message;
+`clear` - clears the content of the screen");
+`toprated` - top rated videos on YouTube");
+`mostviewed` - most viewed videos on YouTube");
+`recentlyfeatured` - recently featured videos on YouTube");
+`user` - find videos by a specified user. Use `-u[sername]=username` to specify user.");
+`search` - search by keyword. Use `-q[uery]=whatever` to specify search term.");
 
-This quick tutorial will create a "Hello World" module. First, create your 
-file, call it hello.js. The first bit of code we need to do is have the module 
-identify itself to intercom. We do this with:
+##3. YouTube Interaction
+All the YouTube API requests are handled by the Zend GData library.
+This allows potential for extending this project significantly and allowing far more advanced funcionality in due time.
 
-    identifyPlugin("hello");
-
-This will be picked up by intercom on page load and will cause intercom to add 
-'hello' to the list of installed plugins.
-
-We can then add the module's parser to the parser list with:
-
-    addParser(hello_hook);
-
-This will add hello's hook parser to the parser list for intercom. A parser is 
-simply a function which intercom will pass the user's input to in order to take 
-action on it.
-
-So now we need to actually make the module do something. We do this by defining 
-the parser function:
-
-    function hello_hook(input) {
-      if (checkCommand(input, "hello")) {
-        output("Hello World!");
-        quitParse();
-      }
-    }
-    
-We now have a working module! A boring one, but thats better than nothing! Now 
-if you visit your index.html and type the `hello` command, you'll see your 
-handiwork output back to you. `quitParse();` is used to tell intercom to stop 
-looking for more matches to the input once your code has run.
-
-Let's add a flag to our module's call. Using intercom's flag functionality is 
-pretty simple. We use one function to generate a flags object followed by 
-another function call to check the flags. Let's alter our hook parser function 
-to take a -greeting flag which lets the user set the greeting:
-    
-    function hello_hook(input) {
-      if (checkCommand(input, "hello")) {
-        hello_flags = extractFlags(input);
-        if (hasFlag(hello_flags, "greeting")) {
-          output(flagValue(hello_flags, "greeting"));
-        } else {
-          output("Hello World!");
-        }
-        quitParse();
-      }
-    }
-    
-So now we can call `hello -greeting=Wassap` and get a whole new greeting.
-
-NOTE: Strings with more than one word cannot currently be flag values.
-
-Finally, let's cause our hook function to redirect intercom's input to a custom 
-parser. Again, we will update our hook function:
-    
-    function hello_hook(input) {
-      if (checkCommand(input, "hello")) {
-        hello_flags = extractFlags(input);
-        if (hasFlag(hello_flags, "greeting")) {
-          output(flagValue(hello_flags, "greeting"));
-        } else if (hasFlag(hello_flags, "parse")) {
-          quitParse();
-          setInputStream(hello_parser);
-        } else {
-          output("Hello World!");
-        }
-        quitParse();
-      }
-    }
-    
-Now, when the flag `-parse` is set, we are changing the input stream from the 
-main input stream to a custom parser. Here we can define the parser to simply 
-output anything which the user types:
-    
-    function hello_parser(input) {
-      output(input);
-      if (input == "quit") {
-        resetInputStream();
-      }
-    }
-    
-We now have a custom input parser with a quit command. Try it out now! Run 
-`hello -parse` in your intercom setup and feel the magic.
-
-That's all there is to it! Using the tools in the API for intercom, you can 
-create online programs and modules which you can quickly run from your intercom 
-console.
-
-##3. API
-
-`identifyPlugin(title)`
-
-Identifies a module to intercom to be added to the list of installed modules.
-
-
-`addParser(parser)`
-
-Adds a parser function to the main intercom parser. Used primarily to add _hook 
-functions which pick up on user input to start a program/module.
-  
-
-`outputWithCarrot(text)`
-
-Outputs formatted text with the input marker.
-
-
-`clearScreen()`
-
-Clears the output on the screen.
-
-
-`none(input)`
-
-Serves as a null parser. Set the input stream to `none` in order to ignore all 
-input.
-
-
-`output(text)`
-
-Outputs text to the console.
-
-
-`quitParse()`
-
-Used to quit the parsing system after a match is made.
-
-
-`setInputStream(newStream)`
-
-Switches the input stream to a different parser.
-
-
-`resetInputStream()`
-
-Set the input stream back to the main parser.
-
-
-`outputPostCall(url, params)`
-
-Does a post call to url with the given params array, outputs the return data.
-
-
-`returnPostCall(url, params)`
-
-Does a post call to url with the given params array, returns the return data.
-
-
-`extractFlags(input)`
-
-Extracts the user defined flags in a given line of input. Returns an 
-associative array of flag=value, where value is true if the flag is a boolean 
-on/off.
-
-
-`hasFlag(flags, find)`
-
-Given a flags object (see: extractFlags) and a flag, returns true if the flag 
-exists in the set of flags.
-
-
-`countFlags(flags)`
-
-Returns the number of user defined flags.
-
-
-`flagValue(flags, key)`
-
-Returns the value of a user defined flag.
-
-
-`checkCommand(input, command)`
-
-Returns true if the input command matches the given command.
-
-
-`extractArguments(input)`
-
-Returns an array of arguments from the given input.
+##4. Working with Intercom
+This YouTube console is based on the console project called [Intercom by twisterghost](https://github.com/twisterghost/intercom)
+Please visit the link above for more details on how to extend the console
