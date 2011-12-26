@@ -19,6 +19,7 @@ your folder of choice.
 
 ##2. Commands
 The console currently allows the following commands:
+
 `help` - display help message;
 
 `clear` - clears the content of the screen");
