@@ -17,6 +17,7 @@ helpText = "<strong>Welcome to the <i>intercom youtube app</i>.</strong><br />" 
  * Useful variables
  */
 lightbox_enabled	=	true;
+lastresults			=	[];
 
 // This is our hook function. This will be run whenever a user enters input.
 // This function should look for initiating calls and act accordingly.
@@ -50,6 +51,21 @@ function youtube_hook(input) {
 	}
 }
 
+/**
+ * All the available commands for interaction with the YouTube video library
+ */
+function outputHelpCommands() {
+  output("Youtube basic commands");
+  output("-----------------------");
+  output("<b>help</b> - display help message");
+  output("<b>clear</b> - clears the content of the screen");
+  output("<b>toprated</b> - top rated videos on YouTube");
+  output("<b>mostviewed</b> - most viewed videos on YouTube");
+  output("<b>recentlyfeatured</b> - recently featured videos on YouTube");
+  output("<b>user</b> - find videos by a specified user. Use <i>-u[sername]=username</i> to specify user.");
+  output("<b>search</b> - search by keyword. Use <i>-q[uery]=whatever</i> to specify search term.");
+  output("<b>lightbox</b> - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0)");
+}
 // This is our custom input stream. It has to take a single paramater which
 // intercom will use to send all user input directly to the input stream
 // once set.
@@ -121,19 +137,62 @@ function youtube_parser(input) {
 	
 }
 
-function outputHelpCommands() {
-  output("Youtube basic commands");
-  output("-----------------------");
-  output("<b>help</b> - display help message");
-  output("<b>clear</b> - clears the content of the screen");
-  output("<b>toprated</b> - top rated videos on YouTube");
-  output("<b>mostviewed</b> - most viewed videos on YouTube");
-  output("<b>recentlyfeatured</b> - recently featured videos on YouTube");
-  output("<b>user</b> - find videos by a specified user. Use <i>-u[sername]=username</i> to specify user.");
-  output("<b>search</b> - search by keyword. Use <i>-q[uery]=whatever</i> to specify search term.");
-  output("<b>lightbox</b> - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0)");
+/**
+ * Display a list of available options when the user is manipulating a set of video results
+ */
+function outputVideoResultCommands() {
+	output("Video result commands");
+	output("-----------------------");
+	output("<b>help</b> - display help message");
+	output("<b>q</b> - exit video results, start a new search");
+	output("<b>info</b> - shows information about a selected video. e.g. <i>info 1</i>");
+	output("<b>play</b> - plays a selected video. e.g. <i>play 1</i>");
 }
 
+/**
+ * Input stream for handling a set of video results
+ */
+function youtube_video_result_parser(input) {
+	output(input);	
+	youtube_arguments	= extractArguments(input);
+	youtube_flags		= extractFlags(input);
+	//exit
+	if(youtube_arguments[0]=='q') {
+		output("Exit successful");
+		setInputStream(youtube_parser);
+	}
+	//help
+	else if(youtube_arguments[0]=='help')
+		outputVideoResultCommands()	
+	// video information
+	else if(youtube_arguments[0]=='info') {
+		//make sure a video is selected
+		if(!youtube_arguments[1]) {
+			output("Select a video to view information for. E.g. <i>info 1</i>")
+		}
+		else {
+			videoindex	=	youtube_arguments[1];
+			if(videoindex > lastresults.length)
+				output("Invalid video selected, try again");
+			else {
+				youtube_video_info(lastresults[videoindex].videoid);
+			}
+		}
+	}
+	//view video
+	else if(youtube_arguments[0]=='play') {
+		if(!youtube_arguments[1]) output("Select a video to view. E.g. <i>play 1</i>");
+		else {
+			if(youtube_arguments[1] > lastresults.length) output("Invalid video selected, try again");
+			else
+				$.prettyPhoto.open(lastresults[youtube_arguments[1]].url);			
+		}
+	}
+}
+
+/**
+ * Fetches videos based on the selected search mode
+ */
 function youtube_video_search(search_mode,params) {
 	myvars	=	{mode:search_mode};
 	$.each(params,function(key,value) {
@@ -142,24 +201,46 @@ function youtube_video_search(search_mode,params) {
 	$.ajax({		
 		data:		myvars,
 		dataType:	'json',
-		url:		basepath + 'app/index.php',
+		url:		basepath + 'app/videos.php',
 		cache:		false,
 		success:	function(data) {		
 			//display results
-			for(var i=0;i<data.length;i++) {
-				output('<a rel="prettyPhoto" href="'+data[i].url+'" target="_blank">'+data[i].title+'</a>');
+			if(data.length > 0) {
+				for(var i=0;i<data.length;i++) {
+					output('<a videoid="'+data[i].videoid+'" rel="prettyPhoto" href="'+data[i].url+'" target="_blank">['+i+'] '+data[i].title+'</a>');
+				}
+				//setup lightbox if enabled
+				if(lightbox_enabled) 
+					$("a[rel^='prettyPhoto']").prettyPhoto({deeplinking: false});
+				//setup the result parser to take in future inputs
+				lastresults	=	data;
+				setInputStream(youtube_video_result_parser);
+				outputVideoResultCommands();
 			}
-			//setup lightbox if enabled
-			if(lightbox_enabled)
-				$("a[rel^='prettyPhoto']").prettyPhoto({
-					deeplinking: false
-				});			
 			//display error if no videos found
-			if(data.length==0)
+			else {				
 				output('<span class="error">No results found</span>');
+			}
 		},
 		error:		function(data) {
 			output("Unable to retrieve results, try again");
+		}
+	});
+}
+
+function youtube_video_info(video) {
+	$.ajax({	
+		data:		{
+			'video':	video
+		},
+		dataType:	'html',
+		url:		basepath + 'app/videoinfo.php',
+		cache:		false,
+		success:	function(data) {
+			output(data);
+		},
+		error:		function(error) {
+			output("Unable to fetch video information");
 		}
 	});
 }
