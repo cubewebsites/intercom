@@ -59,15 +59,15 @@ function youtube_hook(input) {
 function outputHelpCommands() {
   output("----------------------");
   output("Youtube basic commands");
-  output("----------------------");
-  output("<b>help</b> - display help message");
-  output("<b>clear</b> - clears the content of the screen");
+  output("----------------------");  
   output("<b>toprated</b> - top rated videos on YouTube");
   output("<b>mostviewed</b> - most viewed videos on YouTube");
   output("<b>recentlyfeatured</b> - recently featured videos on YouTube");
   output("<b>user</b> - find videos by a specified user. Use <i>-u[sername]=username</i> to specify user.");
   output("<b>search</b> - search by keyword. Use <i>-q[uery]=whatever</i> to specify search term.");
   output("<b>lightbox</b> - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0)");
+  output("<b>help</b> - display help message");
+  output("<b>clear</b> - clears the content of the screen");
   output("----------------------");
 }
 // This is our custom input stream. It has to take a single paramater which
