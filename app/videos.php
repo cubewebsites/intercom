@@ -3,7 +3,7 @@ define('INTERCOM_EXECUTE',true);
 include('inc/common.php');
 
 //setup our YouTube object
-$youtube	=	new Zend_Gdata_Youtube();
+$youtube	=	new Zend_Gdata_YouTube();
 $youtube->setMajorProtocolVersion(2);
 
 //set some initial variables
