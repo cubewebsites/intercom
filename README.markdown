@@ -22,17 +22,20 @@ The console currently allows the following commands:
 
 `help` - display help message;
 
-`clear` - clears the content of the screen");
+`clear` - clears the content of the screen.
 
-`toprated` - top rated videos on YouTube");
+`toprated` - top rated videos on YouTube.
 
-`mostviewed` - most viewed videos on YouTube");
+`mostviewed` - most viewed videos on YouTube.
 
-`recentlyfeatured` - recently featured videos on YouTube");
+`recentlyfeatured` - recently featured videos on YouTube.
 
-`user` - find videos by a specified user. Use `-u[sername]=username` to specify user.");
+`user` - find videos by a specified user. Use `-u[sername]=username` to specify user..
 
-`search` - search by keyword. Use `-q[uery]=whatever` to specify search term.");
+`search` - search by keyword. Use `-q[uery]=whatever` to specify search term..
+
+`lightbox` - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0).  
+Default = 1  
 
 ##3. YouTube Interaction
 All the YouTube API requests are handled by the Zend GData library.
