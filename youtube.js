@@ -55,8 +55,9 @@ function youtube_hook(input) {
  * All the available commands for interaction with the YouTube video library
  */
 function outputHelpCommands() {
+  output("----------------------");
   output("Youtube basic commands");
-  output("-----------------------");
+  output("----------------------");
   output("<b>help</b> - display help message");
   output("<b>clear</b> - clears the content of the screen");
   output("<b>toprated</b> - top rated videos on YouTube");
@@ -65,6 +66,7 @@ function outputHelpCommands() {
   output("<b>user</b> - find videos by a specified user. Use <i>-u[sername]=username</i> to specify user.");
   output("<b>search</b> - search by keyword. Use <i>-q[uery]=whatever</i> to specify search term.");
   output("<b>lightbox</b> - determine whether videos should open in a lightbox or a new window.  The second parameter is a boolean (1/0)");
+  output("----------------------");
 }
 // This is our custom input stream. It has to take a single paramater which
 // intercom will use to send all user input directly to the input stream
@@ -141,12 +143,14 @@ function youtube_parser(input) {
  * Display a list of available options when the user is manipulating a set of video results
  */
 function outputVideoResultCommands() {
+	output("---------------------");
 	output("Video result commands");
-	output("-----------------------");
+	output("---------------------");
 	output("<b>help</b> - display help message");
 	output("<b>q</b> - exit video results, start a new search");
 	output("<b>info</b> - shows information about a selected video. e.g. <i>info 1</i>");
 	output("<b>play</b> - plays a selected video. e.g. <i>play 1</i>");
+	output("---------------------");
 }
 
 /**
@@ -184,7 +188,7 @@ function youtube_video_result_parser(input) {
 		if(!youtube_arguments[1]) output("Select a video to view. E.g. <i>play 1</i>");
 		else {
 			if(youtube_arguments[1] > lastresults.length) output("Invalid video selected, try again");
-			else
+			else				
 				$.prettyPhoto.open(lastresults[youtube_arguments[1]].url);			
 		}
 	}
