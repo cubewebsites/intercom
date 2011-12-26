@@ -30,7 +30,7 @@ $(document).ready(function(){
  */
 function checkKey(e){
     if (e.keyCode == 13){
-        input = $('#input').val();
+        var input = $('#input').val();
         $('#input').val('');
         if (input == "forcequit") {
             outputWithCarrot(input);
