@@ -28,7 +28,7 @@ if($videoid) {
 			'author'		=>	$authorstring,			
 			'date'			=>  date('d M Y g:i:sa',strtotime($video->getPublished())),
 			'category'		=>	$categorystring,
-			'views'			=>	$video->getVideoViewCount(),			
+			'views'			=>	number_format($video->getVideoViewCount()),			
 			'description'	=>	$video->getVideoDescription()
 		);
 		$video->getStatistics();
