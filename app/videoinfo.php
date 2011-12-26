@@ -8,8 +8,8 @@ $youtube->setMajorProtocolVersion(2);
 
 $videoid	=	getRequest('video');
 if($videoid) {
-	$cacheid	=	'videoinfo'.$videoid;
-	$video		= loadCache($cacheid);
+	$cacheid	=	md5('videoinfo'.$videoid);
+	$video		=	loadCache($cacheid);
 	if(!$video) {
 		$video	=	$youtube->getVideoEntry($videoid);
 		saveCache($video,$cacheid,array('videoinfo'));
