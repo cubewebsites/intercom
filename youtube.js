@@ -18,6 +18,8 @@ helpText = "<strong>Welcome to the <i>intercom youtube app</i>.</strong><br />" 
  */
 lightbox_enabled	=	true;
 lastresults			=	[];
+lastparams			=	[];
+currentpage			=	0;
 
 // This is our hook function. This will be run whenever a user enters input.
 // This function should look for initiating calls and act accordingly.
@@ -150,6 +152,9 @@ function outputVideoResultCommands() {
 	output("<b>q</b> - exit video results, start a new search");
 	output("<b>info</b> - shows information about a selected video. e.g. <i>info 1</i>");
 	output("<b>play</b> - plays a selected video. e.g. <i>play 1</i>");
+	output("<b>next</b> - displays the next set of results");
+	output("<b>prev</b> - displays the previous set of results");
+	output("<b>page</b> - skips to a selected results page. E.g. <i>page 4</i>");
 	output("---------------------");
 }
 
@@ -163,6 +168,7 @@ function youtube_video_result_parser(input) {
 	//exit
 	if(youtube_arguments[0]=='q') {
 		output("Exit successful");
+		outputHelpCommands();
 		setInputStream(youtube_parser);
 	}
 	//help
@@ -185,23 +191,47 @@ function youtube_video_result_parser(input) {
 	}
 	//view video
 	else if(youtube_arguments[0]=='play') {
-		if(!youtube_arguments[1]) output("Select a video to view. E.g. <i>play 1</i>");
+		if(!youtube_arguments[1])
+			output("Select a video to view. E.g. <i>play 1</i>");
 		else {
-			if(youtube_arguments[1] > lastresults.length) output("Invalid video selected, try again");
+			if(youtube_arguments[1] > lastresults.length)
+				output("Invalid video selected, try again");
 			else				
 				$.prettyPhoto.open(lastresults[youtube_arguments[1]].url);			
 		}
+	}	
+	//next set of results
+	else if(youtube_arguments[0]=='next') {		
+		repeatsearch(currentpage+1);
 	}
+	
+	//previous set of results
+	else if(youtube_arguments[0]=='prev') {		
+		if(currentpage-1<1)
+			output("Invalid page number specified");
+		else
+			repeatsearch(currentpage-1);
+	}
+	else if(youtube_arguments[0]=='page') {
+		if(!youtube_arguments[1])
+			output("Select a page to go to. E.g. <i>page 1</i>");
+		else if(youtube_arguments[1]<1)
+			output("Invalid page number specified");
+		else
+			repeatsearch(youtube_arguments[1]);
+	}
+	
 }
 
 /**
  * Fetches videos based on the selected search mode
  */
 function youtube_video_search(search_mode,params) {
-	myvars	=	{mode:search_mode};
+	var myvars	=	{mode:search_mode};
 	$.each(params,function(key,value) {
 		myvars[key]	=	value;
 	});
+	if(!myvars['page']) myvars['page']	=	1;	
 	$.ajax({		
 		data:		myvars,
 		dataType:	'json',
@@ -218,7 +248,10 @@ function youtube_video_search(search_mode,params) {
 					$("a[rel^='prettyPhoto']").prettyPhoto({deeplinking: false});
 				//setup the result parser to take in future inputs
 				lastresults	=	data;
+				lastparams	=	myvars;
+				currentpage	=	myvars['page'];
 				setInputStream(youtube_video_result_parser);
+				output("Page: "+currentpage);
 				outputVideoResultCommands();
 			}
 			//display error if no videos found
@@ -232,6 +265,15 @@ function youtube_video_search(search_mode,params) {
 	});
 }
 
+function repeatsearch(page) {
+	var params		=	lastparams;
+	params['page']	=	page;
+	youtube_video_search(params['mode'],params);
+}
+
+/**
+ * Fetches HTML formatted information about a selected video
+ */
 function youtube_video_info(video) {
 	$.ajax({	
 		data:		{

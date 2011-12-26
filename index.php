@@ -28,7 +28,7 @@
     <!-- Code to run when page is ready -->
     <script>
     $("document").ready(function() {
-      output("Type 'help' for installed plugins. Type 'youtube run' to start the app");
+      output("Type 'youtube run' to start the app");
     });
     </script>
   
