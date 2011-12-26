@@ -115,7 +115,7 @@ function youtube_parser(input) {
 	//lightbox toggle
 	else if(youtube_arguments[0]=='lightbox') {		
 		lightbox_enabled	=	youtube_arguments[1]==0?0:1;
-		if(lightboxstatus==1)	output("Lightbox enabled");
+		if(lightbox_enabled==1)	output("Lightbox enabled");
 		else					output("Lightbox disabled");
 	}
 	
@@ -144,10 +144,15 @@ function youtube_video_search(search_mode,params) {
 		dataType:	'json',
 		url:		basepath + 'app/index.php',
 		cache:		false,
-		success:	function(data) {				
+		success:	function(data) {		
+			//display results
 			for(var i=0;i<data.length;i++) {
-				output('<a href="'+data[i].url+'" target="_blank">'+data[i].title+'</a>');
+				output('<a rel="prettyPhoto" href="'+data[i].url+'" target="_blank">'+data[i].title+'</a>');
 			}
+			//setup lightbox if enabled
+			if(lightbox_enabled)
+				$("a[rel^='prettyPhoto']").prettyPhoto();			
+			//display error if no videos found
 			if(data.length==0)
 				output('<span class="error">No results found</span>');
 		},

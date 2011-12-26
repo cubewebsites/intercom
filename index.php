@@ -5,7 +5,9 @@
 <html onclick="$('#input').focus()">
   <head>
     <title>Intercom Development</title>
-    <link rel='stylesheet' href='style.css' type='text/css' />
+    <link rel='stylesheet' href='style.css' type='text/css' />	
+	<link rel='stylesheet' href='js/prettyPhoto/css/prettyPhoto.css' type='text/css' />
+	
 	<script type="text/javascript">
 		var basepath	=	'<?php echo $base ?>'
 	</script>
@@ -35,5 +37,8 @@
     &raquo;&nbsp;<input id="input" onkeydown="checkKey(event)" 
         type="text" style="width:90%; border: none;" />
     </div>
+	
+	<script type='text/javascript' src='js/prettyPhoto/js/jquery.prettyPhoto.js'></script>
+	
   </body>
 </html>
